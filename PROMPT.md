@@ -2,7 +2,7 @@
 
 ## Here's an Overview
 
-We want you to build a **listening party app** where users can:
+We want you to build Nero party, a **listening party** website where users can:
 - Create a listening party and invite friends
 - Add songs to a shared queue
 - Listen together in real-time
@@ -34,7 +34,11 @@ Use the provided starter repo which includes:
 - **Frontend:** React, Vite, TailwindCSS (basic boilerplate)
 - **Database:** SQLite (local, no setup required)
 
-You'll need to integrate with **Spotify's API** for song search and playback.
+We recognize that you may not have experience with some or all of these libraries/ frameworks but we're hoping you can get the hang of it quickly. We won't judge too hard on proper implementation of them. 
+
+However, you should know that this **is** our tech stack, so you'll be rewarded if you're able to use them properly.  
+
+Also, you'll need to integrate with **Spotify's API** for song search and playback. We intentionally did not implement this for you - we're just making sure you know how to figure stuff out on your own. 
 
 ## What We're Evaluating
 
