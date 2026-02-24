@@ -7,10 +7,11 @@ A beautiful real-time listening party web application where friends can join, ad
 - **Real-time Synchronization**: Socket.IO powers instant updates across all connected clients
 - **Party Lobby**: Participants can join and add songs before the party starts
 - **YouTube Integration**: Search and play music directly from YouTube
-- **Vibe Score Voting**: Unique 1-5 rating system with emoji reactions (💀 😴 🎵 💯 🔥)
+- **Vibe Score Voting**: Unique emoji reaction system (⛔ Cut, 😐 Meh, 👍 Keep, 🔥 Play)
+- **Arcade-Style Scoring**: Songs rated by time played × compounding vote multipliers (inspired by VS arcade games)
 - **Live or Hidden Votes**: Host decides if votes are shown in real-time or revealed at the end
 - **Auto-progression**: Songs automatically advance through the queue
-- **Winner Calculation**: Smart algorithm determines the winner based on average score and vote count
+- **Winner Calculation**: Dynamic FinalScore system combining playback time and community votes (0-100 scale)
 - **Beautiful UI**: Dark mode with glassmorphism effects and smooth animations
 - **Mobile Responsive**: Works seamlessly on all devices
 
@@ -174,19 +175,34 @@ nero-party/
 
 ## 🎯 Design Decisions
 
-### Vibe Score (1-5 Rating)
+### Arcade-Inspired Scoring System
 
-I chose a 5-point emoji rating system over simple upvote/downvote because:
-- More nuanced feedback
-- More engaging and expressive
-- Fun visual representation
-- Creates clearer winner separation
+Inspired by VS arcade fighting games, songs are scored using a dual-component system:
 
-### Winner Algorithm
+**Scoring Formula:**
+```
+TimeScore = (playedSeconds / songDurationSeconds) × 100
+VoteMultiplier = starts at 1.0, compounds on EVERY vote:
+  🔥 Play → ×1.04 (+4%)
+  👍 Keep → ×1.02 (+2%)
+  😐 Meh  → ×0.98 (-2%)
+  ⛔ Cut  → ×0.94 (-6%)
 
-- **Average Score**: Primary metric (1-5 scale)
+FinalScore = clamp(0, 100, TimeScore × VoteMultiplier)
+```
+
+**Why This Design:**
+- **Time-based**: Rewards songs people actually listen to (not just vote and skip)
+- **Compounding multipliers**: Each vote matters more as they stack up
+- **Arcade feedback**: Visual text pops every 10 seconds during playback ("🔥 ON FIRE!", "⚡ EPIC!")
+- **Clear scoring**: 0-100 scale is intuitive and leaderboard-friendly
+- **Balanced**: Bad songs get cut early (low TimeScore), great songs survive + get boosted (high multiplier)
+
+### Winner Selection
+
+- **Primary**: FinalScore (0-100 scale combining time + votes)
 - **Minimum Votes**: Requires at least 2 votes to be eligible
-- **Tiebreaker**: Most total votes wins
+- **Fallback**: Uses old average score system for backward compatibility
 
 ### YouTube over Spotify
 
@@ -231,10 +247,10 @@ npx prisma migrate dev
 
 ## 🚧 Known Limitations
 
-- YouTube player requires manual interaction on some mobile browsers
-- Video duration not fetched (would require additional API call)
-- No persistent user accounts
-- Party data deleted on server restart
+- **Mobile Autoplay Restriction**: Most mobile browsers (iOS Safari, Chrome Mobile) block autoplay until user interacts with the page. This is a browser security policy, not an app limitation. **Workaround**: Users can tap anywhere on the screen during the first song to enable autoplay for the rest of the party. This is a one-time interaction per session.
+- **Video Duration**: Not fetched from YouTube API (would cost additional quota units per song). Songs use estimated durations from search results.
+- **No Persistent Accounts**: Parties are session-based. No user registration or login system.
+- **Party Ephemeral**: Party data is deleted when the backend server restarts (in-memory + SQLite database).
 
 ## 📝 License
 

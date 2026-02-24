@@ -1,0 +1,255 @@
+openapi: 3.0.3
+info:
+  title: Nero Party API
+  description: Real-time listening party application with YouTube integration and Vibe Score voting
+  version: 1.0.0
+  contact:
+    name: Nero Party
+    url: https://github.com/yourusername/nero-party
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Returns the health status of the API server
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  /api/youtube/search:
+    get:
+      summary: Search YouTube for music videos
+      description: Proxy endpoint to search YouTube Data API for music videos
+      tags:
+        - YouTube
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Search query string
+          schema:
+            type: string
+            example: "never gonna give you up"
+      responses:
+        '200':
+          description: Successful search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/YouTubeSearchResult'
+        '400':
+          description: Bad request - missing query parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error or YouTube API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Query parameter required"
+
+    YouTubeSearchResult:
+      type: object
+      properties:
+        id:
+          type: object
+          properties:
+            videoId:
+              type: string
+              example: "dQw4w9WgXcQ"
+        snippet:
+          type: object
+          properties:
+            title:
+              type: string
+              example: "Rick Astley - Never Gonna Give You Up (Official Music Video)"
+            channelTitle:
+              type: string
+              example: "Rick Astley"
+            thumbnails:
+              type: object
+              properties:
+                medium:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                      example: "https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg"
+
+    PartyConfig:
+      type: object
+      properties:
+        duration:
+          type: integer
+          nullable: true
+          description: Party duration in minutes (null for unlimited)
+          example: 30
+        songLimit:
+          type: integer
+          nullable: true
+          description: Maximum number of songs (null for unlimited)
+          example: 20
+        voteVisibility:
+          type: string
+          enum: [live, hidden]
+          description: Whether votes are visible in real-time or hidden until end
+          example: "live"
+
+    Party:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        code:
+          type: string
+          example: "ABC123"
+          description: 6-character party code for joining
+        status:
+          type: string
+          enum: [lobby, active, ended]
+          example: "active"
+        duration:
+          type: integer
+          nullable: true
+          example: 30
+        songLimit:
+          type: integer
+          nullable: true
+          example: 20
+        voteVisibility:
+          type: string
+          enum: [live, hidden]
+          example: "live"
+        currentSongId:
+          type: string
+          format: uuid
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        startedAt:
+          type: string
+          format: date-time
+          nullable: true
+        endedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    Participant:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "John Doe"
+        isHost:
+          type: boolean
+          example: false
+        socketId:
+          type: string
+          nullable: true
+        joinedAt:
+          type: string
+          format: date-time
+        lastSeen:
+          type: string
+          format: date-time
+
+    Song:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        youtubeId:
+          type: string
+          example: "dQw4w9WgXcQ"
+        title:
+          type: string
+          example: "Never Gonna Give You Up"
+        artist:
+          type: string
+          example: "Rick Astley"
+        thumbnail:
+          type: string
+          format: uri
+        duration:
+          type: integer
+          description: Duration in seconds
+        status:
+          type: string
+          enum: [queued, playing, played]
+        orderIndex:
+          type: integer
+        playedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    Vote:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        songId:
+          type: string
+          format: uuid
+        participantId:
+          type: string
+          format: uuid
+        score:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+        createdAt:
+          type: string
+          format: date-time
+
+tags:
+  - name: Health
+    description: Health check endpoints
+  - name: YouTube
+    description: YouTube search and video endpoints
+  - name: Socket.IO
+    description: Real-time Socket.IO events (see Socket.IO documentation)
