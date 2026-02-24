@@ -1,49 +1,249 @@
-# Nero Party
+# 🎵 Nero Party
 
-A listening party app where friends join, add songs, listen together, and crown a winning song.
+A beautiful real-time listening party web application where friends can join, add songs, and vote on their favorites together.
 
-## Getting Started
+## ✨ Features
+
+- **Real-time Synchronization**: Socket.IO powers instant updates across all connected clients
+- **Party Lobby**: Participants can join and add songs before the party starts
+- **YouTube Integration**: Search and play music directly from YouTube
+- **Vibe Score Voting**: Unique 1-5 rating system with emoji reactions (💀 😴 🎵 💯 🔥)
+- **Live or Hidden Votes**: Host decides if votes are shown in real-time or revealed at the end
+- **Auto-progression**: Songs automatically advance through the queue
+- **Winner Calculation**: Smart algorithm determines the winner based on average score and vote count
+- **Beautiful UI**: Dark mode with glassmorphism effects and smooth animations
+- **Mobile Responsive**: Works seamlessly on all devices
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js (v18 or higher)
 - npm or yarn
-- A music API for search/playback (your choice — see PROMPT.md)
+- YouTube Data API v3 Key (free)
 
-### Installation
+### 1. Get a YouTube API Key
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+2. Create a new project (or select existing)
+3. Enable "YouTube Data API v3"
+4. Create credentials → API Key
+5. Copy the API key
+
+### 2. Install Dependencies
 
 ```bash
-# Install all dependencies
 npm install
+```
 
-# Set up environment variables (no API keys required by default)
-cp .env.example .env
+This will install dependencies for both backend and frontend.
 
-# Set up the database
-cd backend && npx prisma migrate dev && cd ..
+### 3. Configure Environment Variables
 
-# Start the development servers
+Create a `.env` file in the root directory:
+
+```bash
+PORT=3000
+YOUTUBE_API_KEY=your_actual_api_key_here
+```
+
+**Important**: Replace `your_actual_api_key_here` with your actual YouTube API key from step 1.
+
+### 4. Run Database Migrations
+
+```bash
+cd backend
+npx prisma migrate dev
+cd ..
+```
+
+This creates the SQLite database with all required tables.
+
+### 5. Start the Application
+
+```bash
 npm run dev
 ```
 
-This will start:
-- Backend on `http://localhost:3000`
-- Frontend on `http://localhost:5173`
+This starts both the backend server (port 3000) and frontend dev server (port 5173).
 
-## Project Structure
+### 6. Open the App
+
+Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
+
+## 🎮 How to Use
+
+### Creating a Party
+
+1. Click "Create Party" on the home screen
+2. Enter your name
+3. Configure party settings:
+   - **Duration**: 15min, 30min, 1hr, 2hr, or unlimited
+   - **Song Limit**: 10, 20, 50 songs, or unlimited
+   - **Vote Visibility**: Live (show votes in real-time) or Hidden (reveal at end)
+4. Click "Create Party"
+5. Share the 6-character party code with friends
+
+### Joining a Party
+
+1. Click "Join Party" on the home screen
+2. Enter your name
+3. Enter the 6-character party code
+4. Click "Join Party"
+
+### Party Lobby (Before Starting)
+
+- All participants can search and add songs to the queue
+- See who's online
+- Host clicks "Start Party" when ready (requires at least 1 song)
+
+### Active Party (During Playback)
+
+- Songs play automatically via YouTube IFrame Player
+- Vote on each song using the Vibe Score system (1-5)
+- See live votes (if enabled by host)
+- Songs auto-advance when finished
+- Host can manually end the party
+
+### Party Ended (Winner Reveal)
+
+- Winner is displayed with celebration animation
+- View final standings with all songs ranked
+- See vote breakdowns and party stats
+
+## 🏗️ Tech Stack
+
+### Backend
+
+- **Express.js**: HTTP server
+- **Socket.IO**: Real-time WebSocket communication
+- **Prisma**: ORM for database management
+- **SQLite**: Lightweight database
+- **TypeScript**: Type-safe code
+
+### Frontend
+
+- **React 18**: UI framework
+- **Vite**: Fast build tool
+- **TypeScript**: Type safety
+- **TailwindCSS**: Utility-first styling
+- **Framer Motion**: Smooth animations
+- **Zustand**: Lightweight state management
+- **Socket.IO Client**: Real-time communication
+- **Sonner**: Toast notifications
+- **react-youtube**: YouTube player integration
+
+## 📁 Project Structure
 
 ```
 nero-party/
-├── backend/          # Express + Socket.IO server
-│   ├── prisma/       # Database schema & migrations
-│   └── src/          # Server source code
-└── frontend/         # React + Vite client
-    └── src/          # Client source code
+├── backend/
+│   ├── src/
+│   │   ├── index.ts          # Main server with Socket.IO events
+│   │   ├── types.ts          # TypeScript type definitions
+│   │   ├── utils.ts          # Utility functions (party code gen, winner calc)
+│   │   └── env.ts            # Environment configuration
+│   ├── prisma/
+│   │   ├── schema.prisma     # Database schema
+│   │   └── dev.db            # SQLite database (created on migration)
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── Home.tsx      # Landing page with create/join
+│   │   │   └── PartyRoom.tsx # Main party container
+│   │   ├── components/
+│   │   │   ├── PartyLobby.tsx     # Lobby state
+│   │   │   ├── ActiveParty.tsx    # Active state
+│   │   │   ├── PartyEnded.tsx     # Ended state
+│   │   │   ├── SongSearch.tsx     # YouTube search
+│   │   │   ├── SongQueue.tsx      # Song list display
+│   │   │   ├── YouTubePlayer.tsx  # Video player
+│   │   │   └── ParticipantList.tsx # User list
+│   │   ├── store/
+│   │   │   └── partyStore.ts # Zustand state management
+│   │   ├── lib/
+│   │   │   └── socket.ts     # Socket.IO client setup
+│   │   ├── types.ts          # TypeScript types
+│   │   ├── App.tsx           # Main app component
+│   │   └── index.css         # Global styles
+│   └── package.json
+├── .env                      # Environment variables
+└── package.json              # Root scripts
 ```
 
-## Tech Stack
+## 🎯 Design Decisions
 
-- **Backend:** Express.js, Prisma, Socket.IO
-- **Frontend:** React, Vite, TailwindCSS
-- **Database:** SQLite (local)
-- **External API:** Music API of your choice (for song search and playback)
+### Vibe Score (1-5 Rating)
+
+I chose a 5-point emoji rating system over simple upvote/downvote because:
+- More nuanced feedback
+- More engaging and expressive
+- Fun visual representation
+- Creates clearer winner separation
+
+### Winner Algorithm
+
+- **Average Score**: Primary metric (1-5 scale)
+- **Minimum Votes**: Requires at least 2 votes to be eligible
+- **Tiebreaker**: Most total votes wins
+
+### YouTube over Spotify
+
+- **No OAuth**: Simpler authentication (just API key)
+- **Free Tier**: Generous quota (10,000 units/day)
+- **Embedded Player**: Built-in IFrame player
+- **Wide Availability**: No premium account required
+
+### State Machine
+
+Clear states for predictable behavior:
+- **lobby**: Add songs, configure
+- **active**: Play music, vote
+- **ended**: Show winner
+
+## 🔧 Troubleshooting
+
+### YouTube API Quota Exceeded
+
+If you see errors, you may have hit the daily quota (10,000 units). Each search costs ~100 units. Wait 24 hours or create a new project.
+
+### Songs Not Playing
+
+- Check if YouTube video is available in your region
+- Ensure autoplay is enabled in browser
+- Try a different song
+
+### Connection Issues
+
+- Ensure both servers are running (`npm run dev`)
+- Check browser console for Socket.IO errors
+- Verify firewall isn't blocking WebSocket connections
+
+### Database Issues
+
+If database gets corrupted:
+```bash
+cd backend
+rm prisma/dev.db
+npx prisma migrate dev
+```
+
+## 🚧 Known Limitations
+
+- YouTube player requires manual interaction on some mobile browsers
+- Video duration not fetched (would require additional API call)
+- No persistent user accounts
+- Party data deleted on server restart
+
+## 📝 License
+
+MIT License - Feel free to use for your own projects!
+
+## 🙏 Acknowledgments
+
+Built with ☕ and 🎵 as a technical assessment project.
+
+---
+
+**Need help?** Open an issue or check the WHATIVEDONE.md for detailed architecture information.

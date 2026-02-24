@@ -3,3 +3,8 @@ dist/
 .env
 *.db
 *.db-journal
+.jest-localstorage
+
+*storybook.log
+storybook-static
+WHATIVEDONE.md

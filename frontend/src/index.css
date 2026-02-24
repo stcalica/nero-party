@@ -1,3 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  }
+
+  body {
+    @apply bg-background text-text-primary min-h-screen antialiased;
+    letter-spacing: -0.01em;
+  }
+
+  .dark body {
+    @apply bg-dark-background text-dark-text-primary;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  /* Glass effect - frosted glass with border */
+  .glass {
+    @apply bg-surface/50 backdrop-blur-2xl border border-white/10;
+  }
+
+  .dark .glass {
+    @apply bg-dark-surface/50 border-dark-border/50;
+  }
+
+  .glass-hover {
+    @apply glass transition-all duration-200 hover:bg-surface/60 hover:border-white/20;
+  }
+
+  .dark .glass-hover {
+    @apply hover:bg-dark-surface/60 hover:border-dark-border/70;
+  }
+
+  /* Card component - glass surface with prominent border */
+  .card {
+    @apply glass rounded-2xl;
+  }
+
+  /* Button base - pill-shaped with glass effect */
+  .btn {
+    @apply px-6 py-3 rounded-full font-medium transition-all duration-200 border-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-text-primary/90 backdrop-blur-md border-text-primary text-surface hover:bg-text-primary hover:shadow-md;
+  }
+
+  .dark .btn-primary {
+    @apply bg-dark-text-primary/90 border-dark-text-primary text-dark-background hover:bg-dark-text-primary;
+  }
+
+  .btn-secondary {
+    @apply btn glass-hover text-text-primary;
+  }
+
+  .dark .btn-secondary {
+    @apply text-dark-text-primary;
+  }
+
+  .btn-disabled {
+    @apply btn bg-disabled/80 backdrop-blur-md border-disabled text-surface cursor-not-allowed;
+  }
+
+  /* Input fields - glass with border */
+  .input {
+    @apply w-full px-4 py-3 glass rounded-full text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent focus:bg-surface/95 transition-all;
+  }
+
+  .dark .input {
+    @apply text-dark-text-primary placeholder:text-dark-text-muted focus:bg-dark-surface/95;
+  }
+
+  /* Accent elements (mint green) */
+  .accent-border {
+    @apply border-2 border-dashed border-accent bg-accent/5;
+  }
+
+  /* Toast notifications - glassmorphism design */
+  .glass-toast {
+    @apply glass rounded-2xl shadow-lg !important;
+    min-width: 320px !important;
+    padding: 1rem 1.25rem !important;
+  }
+
+  .toast-title {
+    @apply text-text-primary font-medium !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  .dark .toast-title {
+    @apply text-dark-text-primary !important;
+  }
+
+  .toast-description {
+    @apply text-text-muted text-sm !important;
+  }
+
+  .dark .toast-description {
+    @apply text-dark-text-muted !important;
+  }
+
+  .toast-success {
+    @apply border-green-500/60 !important;
+  }
+
+  .toast-success [data-icon] {
+    @apply text-green-600 !important;
+  }
+
+  .toast-error {
+    @apply border-red-500/60 !important;
+  }
+
+  .toast-error [data-icon] {
+    @apply text-red-600 !important;
+  }
+
+  .toast-warning {
+    @apply border-yellow-500/60 !important;
+  }
+
+  .toast-warning [data-icon] {
+    @apply text-yellow-600 !important;
+  }
+
+  .toast-info {
+    @apply border-blue-500/60 !important;
+  }
+
+  .toast-info [data-icon] {
+    @apply text-blue-600 !important;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Arcade-style pulse animation for YouTube player feedback */
+@keyframes arcadePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}

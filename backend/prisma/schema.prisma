@@ -7,4 +7,103 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-// Design your schema here
+// PARTY STATES: lobby → active → ended
+model Party {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  status    String   @default("lobby") // lobby, active, ended
+
+  // Host Configuration
+  duration       Int?    // minutes, null = unlimited
+  songLimit      Int?    // null = unlimited
+  voteVisibility String  @default("live") // live or hidden
+  theme          String  @default("default") // default, birthday, hiphop, punk
+  birthdayUserId String? // ID of participant whose birthday it is (only for birthday theme)
+
+  // Lifecycle Timestamps
+  createdAt DateTime @default(now())
+  startedAt DateTime? // when host clicks "Start Party"
+  endedAt   DateTime? // when party ends (time/song limit or manual)
+
+  // Current Playback State
+  currentSongId String? // ID of currently playing song
+
+  // Relations
+  participants Participant[]
+  songs        Song[]
+
+  @@index([code])
+}
+
+// PARTICIPANT ROLES: host (creator) or participant (joiner)
+// PRESENCE: online (has socketId) or offline (null socketId)
+model Participant {
+  id        String   @id @default(cuid())
+  partyId   String
+  name      String
+  socketId  String?  // non-null = online, null = offline
+  isHost    Boolean  @default(false)
+
+  joinedAt  DateTime @default(now())
+  lastSeen  DateTime @default(now())
+
+  // Relations
+  party      Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  songsAdded Song[]
+  votes      Vote[]
+
+  @@index([partyId])
+  @@index([socketId])
+}
+
+// SONG STATES: queued → playing → played
+model Song {
+  id          String   @id @default(cuid())
+  partyId     String
+  addedById   String
+
+  // YouTube Metadata
+  youtubeId   String
+  title       String
+  artist      String
+  thumbnail   String
+  duration    Int      // seconds
+
+  // Queue & Playback State
+  status      String   @default("queued") // queued, playing, played
+  orderIndex  Int      // position in queue (0-indexed)
+  playedAt    DateTime? // when song finished playing
+
+  // Scoring (optional, computed when song ends)
+  voteMultiplier Float?   // compounded vote reactions (starts at 1.0)
+  finalScore     Float?   // (playedSeconds / duration) * 100 * voteMultiplier, clamped [0, 100]
+
+  createdAt   DateTime @default(now())
+
+  // Relations
+  party       Party       @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  addedBy     Participant @relation(fields: [addedById], references: [id], onDelete: Cascade)
+  votes       Vote[]
+
+  @@index([partyId])
+  @@index([partyId, orderIndex])
+  @@index([partyId, status])
+}
+
+// VOTE: Vibe Score (1-5)
+// 💀 = 1, 😴 = 2, 🎵 = 3, 💯 = 4, 🔥 = 5
+model Vote {
+  id            String   @id @default(cuid())
+  songId        String
+  participantId String
+  score         Int      // 1-5 vibe score
+  createdAt     DateTime @default(now())
+
+  // Relations
+  song          Song        @relation(fields: [songId], references: [id], onDelete: Cascade)
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  // Each participant can only vote once per song
+  @@unique([songId, participantId])
+  @@index([songId])
+}
