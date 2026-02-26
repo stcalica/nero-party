@@ -27,7 +27,6 @@ const themeConfigs: Record<number, { emoji: string; glowColor: string }> = {
 };
 
 export default function PartyEnded({ result, party }: PartyEndedProps) {
-  const { reset } = usePartyStore();
   const [createNewPartyModal, setCreateNewPartyModal] = useState(false);
   const [isRecreating, setIsRecreating] = useState(false);
 
@@ -51,6 +50,7 @@ export default function PartyEnded({ result, party }: PartyEndedProps) {
 
   // Determine winner's theme based on average score
   const winnerScore = result.winner ? Math.round(result.winner.averageScore) : null;
+  console.log(`winner score: ${winnerScore}`)
   const winnerTheme = winnerScore && winnerScore >= 1 && winnerScore <= 4
     ? themeConfigs[winnerScore]
     : null;
