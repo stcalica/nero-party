@@ -4,26 +4,26 @@ export type SongStatus = "queued" | "playing" | "played";
 export type PartyTheme = "default" | "birthday" | "hiphop" | "punk";
 
 // Configuration
-export interface PartyConfig {
+export type PartyConfig = {
   duration: number | null; // minutes
   songLimit: number | null;
   voteVisibility: "live" | "hidden";
   theme: PartyTheme;
   birthdayUserId: string | null;
-}
+};
 
 // Socket Event Payloads
-export interface CreatePartyPayload {
+export type CreatePartyPayload = {
   hostName: string;
   config: PartyConfig;
-}
+};
 
-export interface JoinPartyPayload {
+export type JoinPartyPayload = {
   code: string;
   name: string;
-}
+};
 
-export interface AddSongPayload {
+export type AddSongPayload = {
   partyCode: string;
   song: {
     youtubeId: string;
@@ -32,54 +32,54 @@ export interface AddSongPayload {
     thumbnail: string;
     duration: number;
   };
-}
+};
 
-export interface VoteSongPayload {
+export type VoteSongPayload = {
   songId: string;
   score: number; // 1-5
-}
+};
 
-export interface StartPartyPayload {
+export type StartPartyPayload = {
   partyCode: string;
-}
+};
 
-export interface EndPartyPayload {
+export type EndPartyPayload = {
   partyCode: string;
-}
+};
 
-export interface SkipSongPayload {
+export type SkipSongPayload = {
   partyCode: string;
-}
+};
 
-export interface KickParticipantPayload {
+export type KickParticipantPayload = {
   partyCode: string;
   participantId: string;
-}
+};
 
-export interface SetBirthdayUserPayload {
+export type SetBirthdayUserPayload = {
   partyCode: string;
   userId: string | null;
-}
+};
 
-export interface RecreatePartyPayload {
+export type RecreatePartyPayload = {
   previousPartyCode: string;
   config?: PartyConfig;
-}
+};
 
-export interface PlaybackSyncData {
+export type PlaybackSyncData = {
   songId: string;
   currentTime: number;
   serverTimestamp: number;
-}
+};
 
-export interface PlaybackSeekData {
+export type PlaybackSeekData = {
   songId: string;
   seekTo: number; // Time in seconds to seek to
   reason: "cut" | "meh"; // Why we're seeking
-}
+};
 
 // Socket Events (Client → Server)
-export interface ClientToServerEvents {
+export type ClientToServerEvents = {
   "party:create": (payload: CreatePartyPayload, callback: (response: any) => void) => void;
   "party:recreate": (payload: RecreatePartyPayload, callback: (response: any) => void) => void;
   "party:join": (payload: JoinPartyPayload, callback: (response: any) => void) => void;
@@ -96,10 +96,10 @@ export interface ClientToServerEvents {
   "participant:kick": (payload: KickParticipantPayload) => void;
 
   "presence:heartbeat": () => void;
-}
+};
 
 // Socket Events (Server → Client)
-export interface ServerToClientEvents {
+export type ServerToClientEvents = {
   "party:updated": (party: any) => void;
   "party:started": (party: any) => void;
   "party:ended": (result: any) => void;
@@ -124,10 +124,10 @@ export interface ServerToClientEvents {
 
   "error": (message: string) => void;
   "sync:state": (state: any) => void;
-}
+};
 
 // Winner Calculation
-export interface SongWithStats {
+export type SongWithStats = {
   songId: string;
   title: string;
   artist: string;
@@ -146,9 +146,9 @@ export interface SongWithStats {
   // New scoring fields (optional for backward compatibility)
   finalScore?: number; // Computed score combining time played and vote reactions
   voteMultiplier?: number; // Compounded vote reactions
-}
+};
 
-export interface PartyResult {
+export type PartyResult = {
   winner: SongWithStats;
   allSongs: SongWithStats[];
-}
+};

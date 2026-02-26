@@ -26,6 +26,9 @@ import type {
   EndPartyPayload,
   SkipSongPayload,
   KickParticipantPayload,
+  RecreatePartyPayload,
+  SetBirthdayUserPayload,
+  PlaybackSeekData,
 } from "./types.js";
 
 const app = express();
@@ -827,7 +830,7 @@ io.on("connection", (socket: Socket<ClientToServerEvents, ServerToClientEvents>)
             console.log(`   Forward targets: ${forwardTargets.join(', ')}s`);
             console.log(`   Party: ${song.party.code}`);
 
-            const seekData = {
+            const seekData: PlaybackSeekData = {
               songId: song.id,
               seekTo,
               reason: "meh",

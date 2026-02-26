@@ -9,11 +9,11 @@ interface FireParticle {
   size: number;
 }
 
-interface Props {
+interface FireThemeProps {
   isActive: boolean;
 }
 
-export default function FireTheme({ isActive }: Props) {
+export default function FireTheme({ isActive }: FireThemeProps) {
   const [particles, setParticles] = useState<FireParticle[]>([]);
 
   useEffect(() => {

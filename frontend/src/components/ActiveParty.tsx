@@ -17,12 +17,12 @@ import BirthdayTheme from "./BirthdayTheme";
 import HipHopTheme from "./HipHopTheme";
 import PunkTheme from "./PunkTheme";
 
-interface Props {
+interface ActivePartyProps {
   party: Party;
   currentUser: Participant;
 }
 
-export default function ActiveParty({ party, currentUser }: Props) {
+export default function ActiveParty({ party, currentUser }: ActivePartyProps) {
   const currentSong = useMemo(
     () => party.songs.find((s) => s.id === party.currentSongId),
     [party.songs, party.currentSongId]
@@ -103,7 +103,7 @@ export default function ActiveParty({ party, currentUser }: Props) {
 
   return (
     <>
-      <ConcentricCircles />
+      {party.theme !== "punk" && <ConcentricCircles />}
       {party.theme === "birthday" && <BirthdayTheme />}
       {party.theme === "hiphop" && <HipHopTheme />}
       {party.theme === "punk" && <PunkTheme />}

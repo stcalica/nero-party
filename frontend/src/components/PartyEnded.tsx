@@ -13,7 +13,7 @@ import PunkTheme from "./PunkTheme";
 import { socket } from "../lib/socket";
 import { toast } from "sonner";
 
-interface Props {
+interface PartyEndedProps {
   result: PartyResult;
   party: Party;
 }
@@ -26,7 +26,7 @@ const themeConfigs: Record<number, { emoji: string; glowColor: string }> = {
   4: { emoji: "🔥", glowColor: "rgba(249, 115, 22, 0.15)" }, // Orange for Play
 };
 
-export default function PartyEnded({ result, party }: Props) {
+export default function PartyEnded({ result, party }: PartyEndedProps) {
   const { reset } = usePartyStore();
   const [createNewPartyModal, setCreateNewPartyModal] = useState(false);
   const [isRecreating, setIsRecreating] = useState(false);
@@ -67,7 +67,7 @@ export default function PartyEnded({ result, party }: Props) {
 
   return (
     <>
-      <ConcentricCircles />
+      {party.theme !== "punk" && <ConcentricCircles />}
       {party.theme === "birthday" && <BirthdayTheme />}
       {party.theme === "hiphop" && <HipHopTheme />}
       {party.theme === "punk" && <PunkTheme />}

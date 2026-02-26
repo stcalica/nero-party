@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import type { Participant } from "../types";
 import Modal from "./Modal";
 
-interface Props {
+interface ParticipantListProps {
   participants: Participant[];
   currentUserId?: string;
   isHost?: boolean;
@@ -23,7 +23,7 @@ export default function ParticipantList({
   birthdayUserId = null,
   isBirthdayTheme = false,
   showBirthdaySelector = false,
-}: Props) {
+}: ParticipantListProps) {
   const [kickModal, setKickModal] = useState<{
     isOpen: boolean;
     participantId?: string;

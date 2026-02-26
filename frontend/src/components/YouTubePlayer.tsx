@@ -15,7 +15,7 @@ const ARCADE_MESSAGES = [
   "🚀 LIT! 🚀",
 ];
 
-interface Props {
+interface YouTubePlayerProps {
   videoId: string;
   partyCode: string;
   startPosition?: number;
@@ -27,7 +27,7 @@ export default function YouTubePlayer({
   partyCode,
   startPosition = 0,
   serverTimestamp,
-}: Props) {
+}: YouTubePlayerProps) {
   const playerRef = useRef<any>(null);
   const [showArcadeText, setShowArcadeText] = useState(false);
   const [arcadeMessage, setArcadeMessage] = useState("");

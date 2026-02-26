@@ -3,12 +3,12 @@ import type { Song } from "../types";
 import { VIBE_SCORES } from "../types";
 import { formatScore, getScoreColor } from "../utils/scoring";
 
-interface Props {
+interface SongQueueProps {
   songs: Song[];
   showVotes: boolean;
 }
 
-export default function SongQueue({ songs, showVotes }: Props) {
+export default function SongQueue({ songs, showVotes }: SongQueueProps) {
   // Helper to check if song has a final score
   const hasFinalScore = (song: Song & { finalScore?: number }) => {
     return song.finalScore !== null && song.finalScore !== undefined;

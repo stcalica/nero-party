@@ -4,11 +4,11 @@ import { socket } from "../lib/socket";
 import { toast } from "sonner";
 import type { YouTubeSearchResult } from "../types";
 
-interface Props {
+interface SongSearchProps {
   partyCode: string;
 }
 
-export default function SongSearch({ partyCode }: Props) {
+export default function SongSearch({ partyCode }: SongSearchProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<YouTubeSearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);

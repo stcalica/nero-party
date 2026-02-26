@@ -9,13 +9,13 @@ interface EmojiParticle {
   size: number;
 }
 
-interface Props {
+interface EmojiThemeProps {
   isActive: boolean;
   emoji: string;
   glowColor: string; // rgba format
 }
 
-export default function EmojiTheme({ isActive, emoji, glowColor }: Props) {
+export default function EmojiTheme({ isActive, emoji, glowColor }: EmojiThemeProps) {
   const [particles, setParticles] = useState<EmojiParticle[]>([]);
 
   useEffect(() => {

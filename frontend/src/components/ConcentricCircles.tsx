@@ -7,11 +7,11 @@ interface Circle {
   delay: number;
 }
 
-interface Props {
+interface ConcentricCirclesProps {
   color?: "dark" | "light";
 }
 
-export default function ConcentricCircles({ color = "light" }: Props) {
+export default function ConcentricCircles({ color = "light" }: ConcentricCirclesProps) {
   const colors = {
     dark: "75, 85, 99", // rgb for dark grey
     light: "156, 163, 175", // rgb for light grey

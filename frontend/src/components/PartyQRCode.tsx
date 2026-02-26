@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
 
-interface Props {
+interface PartyQRCodeProps {
   partyCode: string;
 }
 
-export default function PartyQRCode({ partyCode }: Props) {
+export default function PartyQRCode({ partyCode }: PartyQRCodeProps) {
   const joinUrl = `${window.location.origin}?join=${partyCode}`;
   const [copied, setCopied] = useState(false);
 

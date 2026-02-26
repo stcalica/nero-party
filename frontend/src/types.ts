@@ -3,7 +3,7 @@ export type PartyStatus = "lobby" | "active" | "ended";
 export type SongStatus = "queued" | "playing" | "played";
 export type PartyTheme = "default" | "birthday" | "hiphop" | "punk";
 
-export interface Party {
+export type Party = {
   id: string;
   code: string;
   status: PartyStatus;
@@ -18,9 +18,9 @@ export interface Party {
   currentSongId: string | null;
   participants: Participant[];
   songs: Song[];
-}
+};
 
-export interface Participant {
+export type Participant = {
   id: string;
   partyId: string;
   name: string;
@@ -28,9 +28,9 @@ export interface Participant {
   isHost: boolean;
   joinedAt: string;
   lastSeen: string;
-}
+};
 
-export interface Song {
+export type Song = {
   id: string;
   partyId: string;
   addedById: string;
@@ -47,18 +47,18 @@ export interface Song {
   votes: Vote[];
   serverTimestamp?: number;
   startPosition?: number;
-}
+};
 
-export interface Vote {
+export type Vote = {
   id: string;
   songId: string;
   participantId: string;
   score: number; // 1-5
   createdAt: string;
   participant: Participant;
-}
+};
 
-export interface SongWithStats {
+export type SongWithStats = {
   songId: string;
   title: string;
   artist: string;
@@ -77,26 +77,26 @@ export interface SongWithStats {
   // New scoring fields (optional for backward compatibility)
   finalScore?: number; // Combined score (0-100) based on time played and vote reactions
   voteMultiplier?: number; // Compounded vote reactions
-}
+};
 
-export interface PartyResult {
+export type PartyResult = {
   winner: SongWithStats;
   allSongs: SongWithStats[];
-}
+};
 
-export interface PlaybackSyncData {
+export type PlaybackSyncData = {
   songId: string;
   currentTime: number;
   serverTimestamp: number;
-}
+};
 
-export interface PlaybackSeekData {
+export type PlaybackSeekData = {
   songId: string;
   seekTo: number;
   reason: "cut" | "meh";
-}
+};
 
-export interface YouTubeSearchResult {
+export type YouTubeSearchResult = {
   id: {
     videoId: string;
   };
@@ -109,7 +109,7 @@ export interface YouTubeSearchResult {
       };
     };
   };
-}
+};
 
 // Vibe Score configuration
 export const VIBE_SCORES = [

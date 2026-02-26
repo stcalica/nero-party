@@ -4,11 +4,11 @@ import { socket } from "../lib/socket";
 import { toast } from "sonner";
 import Modal from "./Modal";
 
-interface Props {
+interface HostControlsProps {
   partyCode: string;
 }
 
-export default function HostControls({ partyCode }: Props) {
+export default function HostControls({ partyCode }: HostControlsProps) {
   const [skipSongModal, setSkipSongModal] = useState(false);
 
   const handleSkipSong = () => {

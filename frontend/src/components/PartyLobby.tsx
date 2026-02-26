@@ -11,12 +11,12 @@ import BirthdayTheme from "./BirthdayTheme";
 import HipHopTheme from "./HipHopTheme";
 import PunkTheme from "./PunkTheme";
 
-interface Props {
+interface PartyLobbyProps {
   party: Party;
   currentUser: Participant;
 }
 
-export default function PartyLobby({ party, currentUser }: Props) {
+export default function PartyLobby({ party, currentUser }: PartyLobbyProps) {
   const handleStartParty = () => {
     if (party.songs.length === 0) {
       toast.error("Add at least one song to start the party!");
@@ -31,7 +31,7 @@ export default function PartyLobby({ party, currentUser }: Props) {
 
   return (
     <>
-      <ConcentricCircles color="dark" />
+      {party.theme !== "punk" && <ConcentricCircles color="dark" />}
       {party.theme === "birthday" && <BirthdayTheme />}
       {party.theme === "hiphop" && <HipHopTheme />}
       {party.theme === "punk" && <PunkTheme />}
